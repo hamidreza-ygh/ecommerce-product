@@ -69,7 +69,7 @@ metadata:
     traefik.ingress.kubernetes.io/router.middlewares: "control-tier-ecommerce-product-auth@kubernetescrd"
 spec:
   rules:
-    - host: product.tenantodo.life
+    - host: api.tenantodo.life
       http:
         paths:
           - path: /products
