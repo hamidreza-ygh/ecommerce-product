@@ -1,0 +1,68 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecommerce-product
+spec:
+  selector:
+    matchLabels:
+      app: ecommerce-product
+  template:
+    metadata:
+      labels:
+        app: ecommerce-product
+        role: ecommerce-products
+    spec:
+      initContainers:
+        - name: mongo
+          image: mongo:latest
+          restartPolicy: Always
+          ports:
+            - name: mongo
+              containerPort: 27017
+              protocol: TCP
+      containers:
+        - name: ecommerce-product
+          image: ghcr.io/hamidreza-ygh/ecommerce-product:latest
+          env:
+            - name: ME_CONFIG_MONGODB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: ecommerce-product-secrets
+                  key: ME_CONFIG_MONGODB_URL
+          ports:
+            - name: product
+              containerPort: 3001
+              protocol: TCP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ecommerce-product
+spec:
+  selector:
+    app: ecommerce-product
+  ports:
+    - name: product
+      port: 3001
+      protocol: TCP
+  type: ClusterIP
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ecommerce-product
+spec:
+  rules:
+    - host: product.tenantodo.life
+      http:
+        paths:
+          - path: /products
+            pathType: Prefix
+            backend:
+              service:
+                name: ecommerce-product
+                port:
+                  number: 3001
