@@ -57,7 +57,7 @@ class App {
     //   res.setHeader("Access-Control-Allow-Methods","PUT, POST, GET, DELETE, PATCH, OPTIONS");
     // })
     // this.app.use(this.cors);
-    this.app.use("/api", productsRouter);
+    this.app.use("/product", productsRouter);
   }
 
   setupMessageBroker() {
