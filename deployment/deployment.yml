@@ -56,7 +56,7 @@ metadata:
   name:  "ecommerce-product-auth"
 spec:
   forwardAuth:
-    address: "http://api.tenantodo.life/auth"
+    address: "http://api.tenantodo.life/authentication/auth"
     trustForwardHeader: true
     authResponseHeaders:
       - "X-Auth-User"
